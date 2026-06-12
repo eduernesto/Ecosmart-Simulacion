@@ -1,10 +1,10 @@
-# ♻️ EcoSmart – Simulación IoT
+#  EcoSmart – Simulación IoT
 
 > Simulación Wokwi de un sistema de monitoreo de nivel de llenado en contenedores de reciclaje (tachos) usando un **ESP32** y **5 sensores ultrasónicos HC-SR04**. Los datos se envían vía HTTPS a un backend en Render.
 
 ---
 
-## 📦 Componentes
+##  Componentes
 
 | Componente                  | Cantidad | Descripción                                  |
 |-----------------------------|----------|----------------------------------------------|
@@ -13,7 +13,7 @@
 | Resistor 1 kΩ               | 5        | Divisor de tensión (ECHO → 3.3V)             |
 | Resistor 2 kΩ               | 5        | Divisor de tensión (GND)                     |
 
-## 🔌 Mapa de pines
+##  Mapa de pines
 
 | Sensor (HC‑SR04) | TRIG | ECHO | Tacho ID |
 |------------------|------|------|----------|
@@ -23,7 +23,7 @@
 | Ultrasonic #4    | D32  | D33  | 4        |
 | Ultrasonic #5    | D25  | D26  | 5        |
 
-### 🔧 Divisor de tensión (ECHO → 3.3V)
+###  Divisor de tensión (ECHO → 3.3V)
 
 Cada pin ECHO de los HC-SR04 (5V) se conecta al ESP32 (3.3V tolerante) mediante un divisor resistivo:
 
@@ -35,7 +35,7 @@ HC-SR04 ECHO ──┬── R1 (1 kΩ) ──┬── ESP32 GPIO (3.3V)
 
 - Vout = 5V × (2k / (1k + 2k)) ≈ 3.33V ✅
 
-## 🧠 Arquitectura del firmware
+##  Arquitectura del firmware
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -51,7 +51,7 @@ HC-SR04 ECHO ──┬── R1 (1 kΩ) ──┬── ESP32 GPIO (3.3V)
 └─────────────────────────────────────────────────────────┘
 ```
 
-### 📡 Flujo de operación
+###  Flujo de operación
 
 1. **Setup** → Configura pines, conecta WiFi (`Wokwi-GUEST`)
 2. **Lectura** → Para cada sensor toma **7 muestras** con 20 ms de separación
@@ -60,7 +60,7 @@ HC-SR04 ECHO ──┬── R1 (1 kΩ) ──┬── ESP32 GPIO (3.3V)
 5. **POST** → Envía vía HTTPS (TLS inseguro para demo) al backend
 6. **Espera** → 20 segundos y repite
 
-### 📤 Formato del JSON enviado
+###  Formato del JSON enviado
 
 ```json
 {
@@ -89,13 +89,13 @@ HC-SR04 ECHO ──┬── R1 (1 kΩ) ──┬── ESP32 GPIO (3.3V)
 | Backend    | [Render](https://render.com) — `ecosmart-backend-mufu` |
 | GPIO       | 5× HC-SR04 con divisores resistivos 1kΩ / 2kΩ       |
 
-## 🚀 Cómo ejecutar
+## Cómo ejecutar
 
 ### Opción 1 — Wokwi Online (recomendado)
 
 1. Abre el proyecto en [Wokwi](https://wokwi.com/projects/new/esp32)
 2. Copia `diagram.json`, `wokwi.toml` y `src/main.cpp`
-3. Presiona ▶️ **Start Simulation**
+3. Presiona **Start Simulation**
 
 ### Opción 2 — PlatformIO local
 
@@ -111,7 +111,7 @@ pio run --target upload
 pio device monitor
 ```
 
-## 📁 Estructura del proyecto
+## Estructura del proyecto
 
 ```
 Ecosmart-simulacion/
@@ -128,11 +128,11 @@ Ecosmart-simulacion/
 └── wokwi.toml                 # Configuración del simulador
 ```
 
-## 🔗 Backend
+## Backend
 
 El firmware envía las lecturas a:  
 `https://ecosmart-backend-mufu.onrender.com/api/mediciones`
 
-## 📄 Licencia
+## Licencia
 
 MIT
