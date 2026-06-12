@@ -33,7 +33,7 @@ HC-SR04 ECHO ──┬── R1 (1 kΩ) ──┬── ESP32 GPIO (3.3V)
                 └── R2 (2 kΩ) ──┴── GND
 ```
 
-- Vout = 5V × (2k / (1k + 2k)) ≈ 3.33V ✅
+- Vout = 5V × (2k / (1k + 2k)) ≈ 3.33V 
 
 ##  Arquitectura del firmware
 
