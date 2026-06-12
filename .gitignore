@@ -1,0 +1,58 @@
+# ============ PlatformIO ============
+.pio/
+.pioenvs/
+.piolibdeps/
+.piodeps/
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/ipch/
+.vscode/.browse.c_cpp.db*
+.vscode/*.db
+sdkconfig*
+build/
+
+# ============ Compilación / Binarios ============
+*.o
+*.o.d
+*.a
+*.s
+*.elf
+*.hex
+*.bin
+*.out
+*.app
+*.map
+*.db
+*.db.lock
+*.tmp
+*.checksum
+*.dblite
+*.pyc
+__pycache__/
+
+# ============ IDE ============
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============ Wokwi ============
+# Mantener wokwi.toml y diagram.json; ignorar sólo lo generado
+wokwi-out/
+
+# ============ Documentación generada ============
+dist/
+htmlcov/
+
+# ============ Dependencias de usuario ============
+lib/README
+test/README
+include/README
+
+# ============ Entorno / Sensible ============
+.env
+.env.local
+secrets.*

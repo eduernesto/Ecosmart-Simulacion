@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "author": "Uri Shaked",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": -20, "left": -150, "attrs": {} },
+    
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic1", "top": -50, "left": 20, "attrs": { "distance": "90", "maxDistance": "120" } },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic2", "top": 50,  "left": 20, "attrs": { "distance": "90", "maxDistance": "120" } },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic3", "top": 150, "left": 20, "attrs": { "distance": "90", "maxDistance": "120" } },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic4", "top": 250, "left": 20, "attrs": { "distance": "90", "maxDistance": "120" } },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic5", "top": 350, "left": 20, "attrs": { "distance": "90", "maxDistance": "120" } },
+
+    { "type": "wokwi-resistor", "id": "r1_1", "top": -40, "left": -30, "attrs": { "resistance": "1000" } },
+    { "type": "wokwi-resistor", "id": "r1_2", "top": -25, "left": -30, "attrs": { "resistance": "2000" } },
+    { "type": "wokwi-resistor", "id": "r2_1", "top": 60, "left": -30, "attrs": { "resistance": "1000" } },
+    { "type": "wokwi-resistor", "id": "r2_2", "top": 75, "left": -30, "attrs": { "resistance": "2000" } },
+    { "type": "wokwi-resistor", "id": "r3_1", "top": 160, "left": -30, "attrs": { "resistance": "1000" } },
+    { "type": "wokwi-resistor", "id": "r3_2", "top": 175, "left": -30, "attrs": { "resistance": "2000" } },
+    { "type": "wokwi-resistor", "id": "r4_1", "top": 260, "left": -30, "attrs": { "resistance": "1000" } },
+    { "type": "wokwi-resistor", "id": "r4_2", "top": 275, "left": -30, "attrs": { "resistance": "2000" } },
+    { "type": "wokwi-resistor", "id": "r5_1", "top": 360, "left": -30, "attrs": { "resistance": "1000" } },
+    { "type": "wokwi-resistor", "id": "r5_2", "top": 375, "left": -30, "attrs": { "resistance": "2000" } }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+
+    [ "ultrasonic1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "ultrasonic2:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "ultrasonic3:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "ultrasonic4:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "ultrasonic5:VCC", "esp:3V3", "red", [ "v0" ] ],
+
+    [ "ultrasonic1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "ultrasonic2:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "ultrasonic3:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "ultrasonic4:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "ultrasonic5:GND", "esp:GND.1", "black", [ "v0" ] ],
+
+
+    [ "ultrasonic1:TRIG", "esp:D4", "green", [ "v0" ] ],
+    [ "ultrasonic1:ECHO", "r1_1:1", "green", [ "h0" ] ],
+    [ "r1_1:2", "esp:D2", "green", [ "v0" ] ],
+    [ "esp:D2", "r1_2:1", "green", [ "v0" ] ],
+    [ "r1_2:2", "esp:GND.1", "green", [ "v0" ] ],
+
+
+    [ "ultrasonic2:TRIG", "esp:D13", "blue", [ "v0" ] ],
+    [ "ultrasonic2:ECHO", "r2_1:1", "blue", [ "h0" ] ],
+    [ "r2_1:2", "esp:D12", "blue", [ "v0" ] ],
+    [ "esp:D12", "r2_2:1", "blue", [ "v0" ] ],
+    [ "r2_2:2", "esp:GND.1", "blue", [ "v0" ] ],
+
+
+    [ "ultrasonic3:TRIG", "esp:D14", "purple", [ "v0" ] ],
+    [ "ultrasonic3:ECHO", "r3_1:1", "purple", [ "h0" ] ],
+    [ "r3_1:2", "esp:D27", "purple", [ "v0" ] ],
+    [ "esp:D27", "r3_2:1", "purple", [ "v0" ] ],
+    [ "r3_2:2", "esp:GND.1", "purple", [ "v0" ] ],
+
+ 
+    [ "ultrasonic4:TRIG", "esp:D32", "orange", [ "v0" ] ],
+    [ "ultrasonic4:ECHO", "r4_1:1", "orange", [ "h0" ] ],
+    [ "r4_1:2", "esp:D33", "orange", [ "v0" ] ],
+    [ "esp:D33", "r4_2:1", "orange", [ "v0" ] ],
+    [ "r4_2:2", "esp:GND.1", "orange", [ "v0" ] ],
+
+    [ "ultrasonic5:TRIG", "esp:D25", "yellow", [ "v0" ] ],
+    [ "ultrasonic5:ECHO", "r5_1:1", "yellow", [ "h0" ] ],
+    [ "r5_1:2", "esp:D26", "yellow", [ "v0" ] ],
+    [ "esp:D26", "r5_2:1", "yellow", [ "v0" ] ],
+    [ "r5_2:2", "esp:GND.1", "yellow", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
