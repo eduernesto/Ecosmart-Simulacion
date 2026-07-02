@@ -138,6 +138,15 @@ void loop() {
     return;
   }
 
+  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  time_t now = 0;
+  int retry = 0;
+  while (now < 100000 && retry < 10) {
+    delay(200);
+    time(&now);
+    retry++;
+  }
+
   JsonDocument doc;
   JsonArray lecturas = doc["lecturas"].to<JsonArray>();
 
@@ -145,9 +154,12 @@ void loop() {
   for (int i = 0; i < numSensores; i++) {
     float dist = medirFiable(sensores[i].trig, sensores[i].echo);
 
+    int distCm = (dist >= 0) ? (int)ceil(dist) : -1;
+    if (distCm > 120) distCm = 120;
+
     JsonObject tacho = lecturas.add<JsonObject>();
     tacho["tacho_id"]  = sensores[i].tachoId;
-    tacho["distancia"] = (dist >= 0) ? (int)ceil(dist) : -1;
+    tacho["distancia"] = distCm;
 
     if (dist >= 0)
       Serial.printf("Tacho %d: %.1f cm\n", sensores[i].tachoId, dist);
