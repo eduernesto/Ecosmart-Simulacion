@@ -3,6 +3,8 @@
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 #include <ArduinoJson.h>
+#include <mbedtls/md.h>
+#include <time.h>
 
 // ---------- WiFi ----------
 const char* ssid     = "Wokwi-GUEST";
@@ -10,6 +12,9 @@ const char* password = "";
 
 // ---------- Backend ----------
 const String serverName = "https://ecosmart-backend-mufu.onrender.com/api/mediciones";
+
+// ---------- HMAC ----------
+const char* HMAC_SECRET = "eco-smart-hmac-key-2026";
 
 // ---------- Sensores ----------
 struct Sensor {
@@ -29,6 +34,34 @@ const int numSensores = 5;
 
 const float FACTOR  = 59.88;
 const int MUESTRAS  = 7;
+
+// ---------- HMAC-SHA256 ----------
+String calcularHMAC(const String& payload, unsigned long timestamp) {
+  String mensaje = payload + String(timestamp);
+  byte hmacResult[32];
+
+  mbedtls_md_context_t ctx;
+  mbedtls_md_init(&ctx);
+  mbedtls_md_setup(&ctx, mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), 1);
+  mbedtls_md_hmac_starts(&ctx, (const unsigned char*)HMAC_SECRET, strlen(HMAC_SECRET));
+  mbedtls_md_hmac_update(&ctx, (const unsigned char*)mensaje.c_str(), mensaje.length());
+  mbedtls_md_hmac_finish(&ctx, hmacResult);
+  mbedtls_md_free(&ctx);
+
+  String hex = "";
+  for (int i = 0; i < 32; i++) {
+    if (hmacResult[i] < 0x10) hex += "0";
+    hex += String(hmacResult[i], HEX);
+  }
+  return hex;
+}
+
+// ---------- Obtener timestamp Unix vía NTP ----------
+unsigned long obtenerTimestamp() {
+  time_t now;
+  time(&now);
+  return (unsigned long)now;
+}
 
 // ---------- Lectura individual ----------
 float medirDistancia(uint8_t trigPin, uint8_t echoPin) {
@@ -84,6 +117,16 @@ void setup() {
     Serial.print(".");
   }
   Serial.println("\nWiFi conectado");
+
+  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  Serial.print("Sincronizando NTP");
+  time_t now = 0;
+  while (now < 100000) {
+    delay(500);
+    time(&now);
+    Serial.print(".");
+  }
+  Serial.println("\nHora sincronizada");
 }
 
 // ---------- Loop ----------
@@ -116,17 +159,26 @@ void loop() {
   serializeJson(doc, body);
   Serial.println("JSON: " + body);
 
+  unsigned long timestamp = obtenerTimestamp();
+  String firma = calcularHMAC(body, timestamp);
+  Serial.print("Timestamp: ");
+  Serial.println(timestamp);
+  Serial.print("HMAC: ");
+  Serial.println(firma);
+
   WiFiClientSecure client;
   client.setInsecure();
 
   HTTPClient http;
   http.begin(client, serverName);
   http.addHeader("Content-Type", "application/json");
+  http.addHeader("X-Timestamp", String(timestamp));
+  http.addHeader("X-Signature", firma);
   http.setTimeout(15000);
 
   int code = http.POST(body);
   if (code > 0) {
-    Serial.printf("HTTP %d\n", code);
+    Serial.printf("HTTP %d: ", code);
     Serial.println(http.getString());
   } else {
     Serial.printf("Error HTTP: %s\n", http.errorToString(code).c_str());
